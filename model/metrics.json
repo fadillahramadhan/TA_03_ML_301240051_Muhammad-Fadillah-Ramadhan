@@ -1,0 +1,405 @@
+{
+  "n_awal": 24000,
+  "n_missing": 0,
+  "n_dup": 24,
+  "n_akhir": 23976,
+  "rate_default": 0.2210960960960961,
+  "n_default": 5301,
+  "n_tidak": 18675,
+  "n_train": 19180,
+  "n_test": 4796,
+  "n_train_smote": 29878,
+  "train_default_before": 4241,
+  "train_tidak_before": 14939,
+  "threshold": 0.5,
+  "perbandingan": [
+    {
+      "nama": "Tanpa penyeimbangan",
+      "accuracy": 0.822977481234362,
+      "precision": 0.697196261682243,
+      "recall": 0.35188679245283017,
+      "f1": 0.4677115987460815,
+      "auc": 0.7599763645913297
+    },
+    {
+      "nama": "class_weight='balanced'",
+      "accuracy": 0.7831526271893244,
+      "precision": 0.5086058519793459,
+      "recall": 0.5575471698113208,
+      "f1": 0.531953195319532,
+      "auc": 0.7619525473718234
+    },
+    {
+      "nama": "SMOTE (model final)",
+      "accuracy": 0.7793994995829858,
+      "precision": 0.5008389261744967,
+      "recall": 0.5632075471698114,
+      "f1": 0.5301953818827708,
+      "auc": 0.7572110722799079
+    }
+  ],
+  "final": {
+    "nama": "SMOTE (model final)",
+    "accuracy": 0.7793994995829858,
+    "precision": 0.5008389261744967,
+    "recall": 0.5632075471698114,
+    "f1": 0.5301953818827708,
+    "auc": 0.7572110722799079
+  },
+  "cm": {
+    "tn": 3141,
+    "fp": 595,
+    "fn": 463,
+    "tp": 597
+  },
+  "report": {
+    "Tidak gagal bayar": {
+      "precision": 0.8715316315205327,
+      "recall": 0.8407387580299786,
+      "f1-score": 0.855858310626703,
+      "support": 3736.0
+    },
+    "Gagal bayar": {
+      "precision": 0.5008389261744967,
+      "recall": 0.5632075471698114,
+      "f1-score": 0.5301953818827708,
+      "support": 1060.0
+    },
+    "accuracy": 0.7793994995829858,
+    "macro avg": {
+      "precision": 0.6861852788475147,
+      "recall": 0.7019731525998949,
+      "f1-score": 0.6930268462547369,
+      "support": 4796.0
+    },
+    "weighted avg": {
+      "precision": 0.7896020511062712,
+      "recall": 0.7793994995829858,
+      "f1-score": 0.783881099519829,
+      "support": 4796.0
+    }
+  },
+  "threshold_table": [
+    {
+      "threshold": 0.2,
+      "precision": 0.234,
+      "recall": 0.9774,
+      "f1": 0.3776,
+      "fp": 3392,
+      "fn": 24
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.2404,
+      "recall": 0.9519,
+      "f1": 0.3838,
+      "fp": 3189,
+      "fn": 51
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.2538,
+      "recall": 0.9085,
+      "f1": 0.3968,
+      "fp": 2831,
+      "fn": 97
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.2895,
+      "recall": 0.8528,
+      "f1": 0.4322,
+      "fp": 2219,
+      "fn": 156
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.3522,
+      "recall": 0.7462,
+      "f1": 0.4785,
+      "fp": 1455,
+      "fn": 269
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.4408,
+      "recall": 0.6321,
+      "f1": 0.5194,
+      "fp": 850,
+      "fn": 390
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.5008,
+      "recall": 0.5632,
+      "f1": 0.5302,
+      "fp": 595,
+      "fn": 463
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.5313,
+      "recall": 0.5283,
+      "f1": 0.5298,
+      "fp": 494,
+      "fn": 500
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.5611,
+      "recall": 0.4849,
+      "f1": 0.5202,
+      "fp": 402,
+      "fn": 546
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.609,
+      "recall": 0.4453,
+      "f1": 0.5144,
+      "fp": 303,
+      "fn": 588
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.6506,
+      "recall": 0.4075,
+      "f1": 0.5012,
+      "fp": 232,
+      "fn": 628
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.6723,
+      "recall": 0.3755,
+      "f1": 0.4818,
+      "fp": 194,
+      "fn": 662
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.6964,
+      "recall": 0.3245,
+      "f1": 0.4427,
+      "fp": 150,
+      "fn": 716
+    }
+  ],
+  "coef": [
+    {
+      "fitur": "EDU_Lainnya",
+      "label": "Pendidikan lainnya",
+      "koef": -2.405,
+      "odds_ratio": 0.0903
+    },
+    {
+      "fitur": "MARRIAGE_Lainnya",
+      "label": "Status pernikahan lainnya",
+      "koef": -1.2819,
+      "odds_ratio": 0.2775
+    },
+    {
+      "fitur": "PAY_1",
+      "label": "Tunggakan bulan ke-1",
+      "koef": 0.706,
+      "odds_ratio": 2.0259
+    },
+    {
+      "fitur": "PAY_AMT2",
+      "label": "Pembayaran bulan ke-2",
+      "koef": -0.3353,
+      "odds_ratio": 0.7152
+    },
+    {
+      "fitur": "LIMIT_BAL",
+      "label": "Batas kredit",
+      "koef": -0.2567,
+      "odds_ratio": 0.7736
+    },
+    {
+      "fitur": "EDU_SMA",
+      "label": "Pendidikan SMA",
+      "koef": -0.2418,
+      "odds_ratio": 0.7852
+    },
+    {
+      "fitur": "MARRIAGE_Lajang",
+      "label": "Status lajang",
+      "koef": -0.2242,
+      "odds_ratio": 0.7991
+    },
+    {
+      "fitur": "BILL_AMT1",
+      "label": "Tagihan bulan ke-1",
+      "koef": -0.1807,
+      "odds_ratio": 0.8347
+    },
+    {
+      "fitur": "PAY_AMT1",
+      "label": "Pembayaran bulan ke-1",
+      "koef": -0.178,
+      "odds_ratio": 0.8369
+    },
+    {
+      "fitur": "BILL_AMT3",
+      "label": "Tagihan bulan ke-3",
+      "koef": 0.164,
+      "odds_ratio": 1.1783
+    },
+    {
+      "fitur": "PAY_AMT4",
+      "label": "Pembayaran bulan ke-4",
+      "koef": -0.1318,
+      "odds_ratio": 0.8765
+    },
+    {
+      "fitur": "PAY_6",
+      "label": "Tunggakan bulan ke-6",
+      "koef": 0.1166,
+      "odds_ratio": 1.1236
+    },
+    {
+      "fitur": "PAY_4",
+      "label": "Tunggakan bulan ke-4",
+      "koef": 0.0923,
+      "odds_ratio": 1.0967
+    },
+    {
+      "fitur": "BILL_AMT2",
+      "label": "Tagihan bulan ke-2",
+      "koef": 0.0886,
+      "odds_ratio": 1.0927
+    },
+    {
+      "fitur": "PAY_3",
+      "label": "Tunggakan bulan ke-3",
+      "koef": 0.0825,
+      "odds_ratio": 1.086
+    },
+    {
+      "fitur": "BILL_AMT4",
+      "label": "Tagihan bulan ke-4",
+      "koef": -0.0744,
+      "odds_ratio": 0.9283
+    },
+    {
+      "fitur": "SEX_Perempuan",
+      "label": "Jenis kelamin perempuan",
+      "koef": -0.0633,
+      "odds_ratio": 0.9386
+    },
+    {
+      "fitur": "EDU_Sarjana",
+      "label": "Pendidikan sarjana",
+      "koef": -0.0599,
+      "odds_ratio": 0.9418
+    },
+    {
+      "fitur": "BILL_AMT5",
+      "label": "Tagihan bulan ke-5",
+      "koef": 0.0596,
+      "odds_ratio": 1.0614
+    },
+    {
+      "fitur": "AGE",
+      "label": "Usia",
+      "koef": 0.0484,
+      "odds_ratio": 1.0496
+    },
+    {
+      "fitur": "PAY_5",
+      "label": "Tunggakan bulan ke-5",
+      "koef": 0.0469,
+      "odds_ratio": 1.048
+    },
+    {
+      "fitur": "PAY_AMT3",
+      "label": "Pembayaran bulan ke-3",
+      "koef": -0.0267,
+      "odds_ratio": 0.9737
+    },
+    {
+      "fitur": "BILL_AMT6",
+      "label": "Tagihan bulan ke-6",
+      "koef": 0.0241,
+      "odds_ratio": 1.0244
+    },
+    {
+      "fitur": "PAY_2",
+      "label": "Tunggakan bulan ke-2",
+      "koef": 0.0198,
+      "odds_ratio": 1.02
+    },
+    {
+      "fitur": "PAY_AMT5",
+      "label": "Pembayaran bulan ke-5",
+      "koef": -0.0182,
+      "odds_ratio": 0.982
+    },
+    {
+      "fitur": "PAY_AMT6",
+      "label": "Pembayaran bulan ke-6",
+      "koef": 0.0001,
+      "odds_ratio": 1.0001
+    }
+  ],
+  "intercept": 0.03549916964613744,
+  "corr_pay1": 0.3942989231059211,
+  "rate_by_pay1": [
+    {
+      "PAY_1": -2,
+      "mean": 0.13,
+      "size": 2200
+    },
+    {
+      "PAY_1": -1,
+      "mean": 0.1707,
+      "size": 4634
+    },
+    {
+      "PAY_1": 0,
+      "mean": 0.1282,
+      "size": 11765
+    },
+    {
+      "PAY_1": 1,
+      "mean": 0.3391,
+      "size": 2893
+    },
+    {
+      "PAY_1": 2,
+      "mean": 0.6961,
+      "size": 2126
+    },
+    {
+      "PAY_1": 3,
+      "mean": 0.7571,
+      "size": 247
+    },
+    {
+      "PAY_1": 4,
+      "mean": 0.6364,
+      "size": 55
+    },
+    {
+      "PAY_1": 5,
+      "mean": 0.5455,
+      "size": 22
+    },
+    {
+      "PAY_1": 6,
+      "mean": 0.6,
+      "size": 10
+    },
+    {
+      "PAY_1": 7,
+      "mean": 0.7143,
+      "size": 7
+    },
+    {
+      "PAY_1": 8,
+      "mean": 0.5882,
+      "size": 17
+    }
+  ]
+}

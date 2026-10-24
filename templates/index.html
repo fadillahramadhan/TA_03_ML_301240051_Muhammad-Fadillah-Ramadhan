@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KreditSense | Prediksi Risiko Gagal Bayar Kartu Kredit</title>
+  <meta name="description" content="Prototipe sistem pendukung keputusan untuk memprediksi risiko gagal bayar kartu kredit dengan Regresi Logistik.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;else if(matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.dataset.theme='dark'}catch(e){}</script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#">
+        <span class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/></svg></span>
+        KreditSense
+      </a>
+      <div class="nav-links">
+        <a href="#prediksi" class="hide-sm">Prediksi</a>
+        <a href="#model" class="hide-sm">Performa Model</a>
+        <button class="icon-btn" id="theme" aria-label="Ganti tema">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div class="hero-inner">
+      <span class="pill"><i></i>Prototipe sistem pendukung keputusan &middot; Regresi Logistik</span>
+      <h1>Prediksi <span>risiko gagal bayar</span> kartu kredit secara instan</h1>
+      <p>Masukkan profil dan riwayat 6 bulan nasabah. Model memberi skor probabilitas, keputusan "Berisiko" atau "Tidak Berisiko", dan faktor yang paling memengaruhinya.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="kpis">
+    <div class="kpi"><small>AUC</small><b>{{ '%.2f'|format(m.final.auc) }}</b><span>kemampuan membedakan kelas</span></div>
+    <div class="kpi"><small>Recall (gagal bayar)</small><b>{{ '%.0f'|format(m.final.recall*100) }}%</b><span>nasabah berisiko yang terdeteksi</span></div>
+    <div class="kpi"><small>Precision</small><b>{{ '%.0f'|format(m.final.precision*100) }}%</b><span>ketepatan peringatan risiko</span></div>
+    <div class="kpi"><small>Data nasabah</small><b>{{ '{:,}'.format(m.n_akhir).replace(',', '.') }}</b><span>{{ ('%.1f'|format(m.rate_default*100)).replace('.', ',') }}% gagal bayar</span></div>
+  </div>
+
+  <section id="prediksi" class="layout">
+    <form id="form" novalidate autocomplete="off">
+      <div class="card">
+        <div class="card-head"><span class="step">1</span><h2>Profil Nasabah</h2></div>
+        <p class="sub">Data demografis dan batas kredit.</p>
+        <div class="presets">
+          <button type="button" class="chip" data-preset="aman">✓ Contoh nasabah aman</button>
+          <button type="button" class="chip" data-preset="sedang">◐ Contoh risiko sedang</button>
+          <button type="button" class="chip" data-preset="risiko">⚠ Contoh nasabah berisiko</button>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="LIMIT_BAL">Batas kredit <span class="hint">(NT$)</span></label>
+            <div class="addon"><span>NT$</span><input class="input" type="number" id="LIMIT_BAL" name="LIMIT_BAL" min="10000" max="1000000" step="1000" value="100000" required></div>
+          </div>
+          <div class="field">
+            <label for="AGE">Usia <span class="hint">(tahun)</span></label>
+            <input class="input" type="number" id="AGE" name="AGE" min="18" max="100" value="35" required>
+          </div>
+          <div class="field">
+            <label>Jenis kelamin</label>
+            <div class="seg">
+              <input type="radio" name="SEX" id="sx1" value="1"><label for="sx1">Laki-laki</label>
+              <input type="radio" name="SEX" id="sx2" value="2" checked><label for="sx2">Perempuan</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="EDUCATION">Pendidikan</label>
+            <select id="EDUCATION" name="EDUCATION">
+              <option value="1">Pascasarjana</option><option value="2" selected>Sarjana</option>
+              <option value="3">SMA</option><option value="4">Lainnya</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="MARRIAGE">Status pernikahan</label>
+            <select id="MARRIAGE" name="MARRIAGE">
+              <option value="1">Menikah</option><option value="2" selected>Lajang</option><option value="3">Lainnya</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="step">2</span><h2>Riwayat 6 Bulan Terakhir</h2></div>
+        <p class="sub">Lama tunggakan, jumlah tagihan, dan jumlah yang dibayar tiap bulan (NT$).</p>
+        <table class="hist">
+          <thead><tr><th>Bulan</th><th>Tunggakan</th><th>Tagihan</th><th>Pembayaran</th></tr></thead>
+          <tbody>
+          {% for i in range(1, 7) %}
+            <tr>
+              <td><b>Bulan ke-{{ i }}</b>{% if i == 1 %}<span class="tag">terbaru</span>{% endif %}</td>
+              <td>
+                <select name="PAY_{{ i }}" aria-label="Tunggakan bulan ke-{{ i }}">
+                  <option value="0" selected>Lancar</option>
+                  {% for k in range(1, 9) %}<option value="{{ k }}">{{ k }} bulan</option>{% endfor %}
+                  <option value="9">9+ bulan</option>
+                </select>
+              </td>
+              <td><input class="input" type="number" name="BILL_AMT{{ i }}" value="20000" step="100" aria-label="Tagihan bulan ke-{{ i }}"></td>
+              <td><input class="input" type="number" name="PAY_AMT{{ i }}" value="2000" min="0" step="100" aria-label="Pembayaran bulan ke-{{ i }}"></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div class="actions" style="margin-top:22px">
+          <button class="btn btn-primary" id="submit" type="submit"><span class="spin"></span>Prediksi Risiko
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button class="btn btn-ghost" id="reset" type="button">Reset</button>
+        </div>
+        <div class="errors" id="errors" role="alert"></div>
+      </div>
+    </form>
+
+    <aside class="card sticky" aria-live="polite">
+      <div class="card-head"><h2>Hasil Prediksi</h2></div>
+      <div id="result-body">
+        <div class="idle">
+          <svg width="92" height="92" viewBox="0 0 96 96" fill="none"><circle cx="48" cy="48" r="44" fill="rgba(79,70,229,.08)"/><path d="M20 62a28 28 0 0 1 56 0" stroke="#c7d2fe" stroke-width="8" stroke-linecap="round"/><path d="M20 62a28 28 0 0 1 20-27" stroke="#4f46e5" stroke-width="8" stroke-linecap="round"/><circle cx="48" cy="62" r="5" fill="#4f46e5"/><path d="m48 62 14-18" stroke="#4f46e5" stroke-width="4" stroke-linecap="round"/></svg>
+          <h3>Belum ada prediksi</h3>
+          <p>Isi formulir lalu tekan <b>Prediksi Risiko</b>, atau coba salah satu contoh nasabah.</p>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section id="model" class="model">
+    <h2 class="sec-title">Performa Model</h2>
+    <p class="sec-sub">Regresi Logistik dengan StandardScaler dan SMOTE pada data latih. Evaluasi pada {{ '{:,}'.format(m.n_test).replace(',', '.') }} nasabah uji yang tidak pernah dilihat model.</p>
+
+    <div class="metric-row">
+      <div class="metric"><b>{{ '%.1f'|format(m.final.accuracy*100) }}%</b><span>Accuracy</span></div>
+      <div class="metric"><b>{{ '%.1f'|format(m.final.precision*100) }}%</b><span>Precision</span></div>
+      <div class="metric"><b>{{ '%.1f'|format(m.final.recall*100) }}%</b><span>Recall</span></div>
+      <div class="metric"><b>{{ '%.1f'|format(m.final.f1*100) }}%</b><span>F1-Score</span></div>
+      <div class="metric"><b>{{ '%.3f'|format(m.final.auc) }}</b><span>AUC</span></div>
+    </div>
+
+    <div class="charts">
+      <div class="fig"><img src="{{ url_for('static', filename='img/model_cm.png') }}" alt="Confusion matrix" loading="lazy">
+        <p>Dari {{ m.cm.tp + m.cm.fn }} nasabah yang benar-benar gagal bayar, {{ m.cm.tp }} terdeteksi dan {{ m.cm.fn }} terlewat (False Negative).</p></div>
+      <div class="fig"><img src="{{ url_for('static', filename='img/model_roc.png') }}" alt="Kurva ROC" loading="lazy">
+        <p>Kurva berada di atas garis tebakan acak; AUC {{ '%.3f'|format(m.final.auc) }} menandakan diskriminasi yang baik.</p></div>
+      <div class="fig"><img src="{{ url_for('static', filename='img/model_threshold.png') }}" alt="Trade-off threshold" loading="lazy">
+        <p>Menurunkan ambang batas menaikkan Recall dengan mengorbankan Precision.</p></div>
+    </div>
+
+    <div class="two">
+      <div class="card">
+        <h2>Perbandingan Strategi Class Imbalance</h2>
+        <p class="sub">Proporsi gagal bayar hanya {{ ('%.1f'|format(m.rate_default*100)).replace('.', ',') }}%.</p>
+        <table class="cmp">
+          <thead><tr><th>Strategi</th><th>Prec.</th><th>Recall</th><th>F1</th><th>AUC</th></tr></thead>
+          <tbody>
+          {% for r in m.perbandingan %}
+            <tr class="{{ 'final' if 'final' in r.nama else '' }}"><td>{{ r.nama }}</td>
+              <td>{{ '%.2f'|format(r.precision) }}</td><td>{{ '%.2f'|format(r.recall) }}</td>
+              <td>{{ '%.2f'|format(r.f1) }}</td><td>{{ '%.3f'|format(r.auc) }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div class="callout"><b>Mengapa Recall diprioritaskan?</b> False Negative (nasabah berisiko dinilai aman) berujung kredit macet, jauh lebih mahal daripada False Positive (nasabah baik ditinjau ulang). Karena itu model dilatih agar sensitif terhadap kelas gagal bayar.</div>
+      </div>
+      <div class="fig" style="align-self:start"><img src="{{ url_for('static', filename='img/model_koefisien.png') }}" alt="Koefisien model" loading="lazy">
+        <p>Tunggakan pembayaran bulan terbaru adalah prediktor paling dominan.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>KreditSense</b> adalah prototipe untuk keperluan akademik. Model dilatih pada data nasabah kartu kredit Taiwan (2005, UCI/Kaggle) dan tidak boleh dipakai sebagai satu-satunya dasar keputusan kredit nyata.</p>
+  </footer>
+</main>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
